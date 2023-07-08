@@ -8,6 +8,8 @@ import { CreateUserBodyDto, CreateUserResponse } from './dto/create-user.dto';
 import { GetAllUsersResponse } from './dto/get-all-users.dto';
 
 import db from '../db';
+import { AddRoleBodyDto } from '../roles/dto/add-role.dto';
+import { BanUserBodyDto, BanUserResponse } from './dto/ban-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -55,6 +57,17 @@ export class UsersService {
         status: HttpStatus.OK,
         message: 'успешное получение пользователей',
         result: users.rows[0].user_get_all,
+      };
+    }
+  }
+
+  async banUser(dto: BanUserBodyDto): Promise<BanUserResponse> {
+    const banUserQuery = await db.query('SELECT admin_ban_user($1)', [dto]);
+    if (banUserQuery.rows[0].admin_ban_user === true) {
+      return {
+        status: HttpStatus.OK,
+        message: 'пользователь успешно забанен',
+        result: banUserQuery.rows[0].admin_ban_user,
       };
     }
   }

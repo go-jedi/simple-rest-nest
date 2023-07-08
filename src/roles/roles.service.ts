@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { CreateRoleBodyDto, CreateRoleResponse } from './dto/create-role.dto';
 import {
@@ -7,6 +7,7 @@ import {
 } from './dto/get-role-by-value.dto';
 
 import db from '../db';
+import { AddRoleBodyDto, AddRoleResponse } from './dto/add-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -30,6 +31,17 @@ export class RolesService {
         status: 200,
         message: 'успешное получение роли',
         result: role.rows[0].role_get_by_value,
+      };
+    }
+  }
+
+  async addRole(dto: AddRoleBodyDto): Promise<AddRoleResponse> {
+    const addUserRole = await db.query('SELECT role_add_user($1)', [dto]);
+    if (addUserRole.rows[0].role_add_user === true) {
+      return {
+        status: HttpStatus.OK,
+        message: 'успешное добавление роли для пользователя',
+        result: addUserRole.rows[0].role_add_user,
       };
     }
   }

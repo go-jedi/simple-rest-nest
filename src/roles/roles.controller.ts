@@ -7,6 +7,7 @@ import {
   GetRoleByValueBodyDto,
   GetRoleByValueResponse,
 } from './dto/get-role-by-value.dto';
+import { AddRoleBodyDto, AddRoleResponse } from './dto/add-role.dto';
 
 @ApiTags('Роли')
 @Controller('api-v1/roles')
@@ -27,5 +28,12 @@ export class RolesController {
     @Body() roleDto: GetRoleByValueBodyDto,
   ): Promise<GetRoleByValueResponse> {
     return this.rolesService.getRoleByValue(roleDto);
+  }
+
+  @ApiOperation({ summary: 'Выдать роль' })
+  @ApiResponse({ status: 200, type: AddRoleResponse })
+  @Post('add-role')
+  addRole(@Body() roleDto: AddRoleBodyDto): Promise<AddRoleResponse> {
+    return this.rolesService.addRole(roleDto);
   }
 }
