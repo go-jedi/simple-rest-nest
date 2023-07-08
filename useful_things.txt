@@ -3,3 +3,4 @@ npm i cross-env  <- если нам нужно задать заранее в pa
 npm install @nestjs/swagger swagger-ui-express - установка swagger и swagger графическое представление
 npm install @nestjs/jwt bcryptjs - jwt и кеширование пароля
 npm i class-validator class-transformer - для валидирования body
+npm i uuid
