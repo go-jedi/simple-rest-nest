@@ -78,6 +78,29 @@ BEGIN
 END;
 $BODY$;
 
+REATE OR REPLACE FUNCTION public.user_check_exist(
+	js json)
+    RETURNS boolean
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+	_u users;
+BEGIN
+	SELECT *
+	FROM users
+	WHERE email = js->>'email'
+	INTO _u;
+
+    IF _u.id ISNULL THEN
+        RETURN FALSE;
+    ELSE
+        RETURN TRUE;
+    END IF;
+END;
+$BODY$;
+
 CREATE OR REPLACE FUNCTION public.user_create(
 	js json,
 	_uid character varying)
@@ -149,6 +172,33 @@ BEGIN
             FROM users u
         ) ag
     ) uga
+    INTO _response;
+
+    RETURN _response;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.user_get_by_email(
+	_eml character varying)
+    RETURNS json
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+    _response JSONB;
+BEGIN
+    SELECT
+        COALESCE(ugbe.s, '[]')
+    FROM
+    (
+        SELECT json_agg(ag.*)::JSONB s
+        FROM (
+            SELECT u.id, u.uid, u.email, u.password, u.banned, u.banreason, u.created
+            FROM users u
+            WHERE u.email = _eml
+        ) ag
+    ) ugbe
     INTO _response;
 
     RETURN _response;

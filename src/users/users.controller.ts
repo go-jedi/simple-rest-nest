@@ -2,6 +2,10 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
+import {
+  CheckUserExistBodyDto,
+  CheckUserExistResponse,
+} from './dto/check-user-exist.dto';
 import { CreateUserBodyDto, CreateUserResponse } from './dto/create-user.dto';
 import { GetAllUsersResponse } from './dto/get-all-users.dto';
 
@@ -9,6 +13,15 @@ import { GetAllUsersResponse } from './dto/get-all-users.dto';
 @Controller('api-v1/users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @ApiOperation({ summary: 'Проверить существование пользователя' })
+  @ApiResponse({ status: 200, type: CheckUserExistResponse })
+  @Post('check-exist')
+  checkUserExist(
+    @Body() userDto: CheckUserExistBodyDto,
+  ): Promise<CheckUserExistResponse> {
+    return this.usersService.checkUserExist(userDto);
+  }
 
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 200, type: CreateUserResponse })
