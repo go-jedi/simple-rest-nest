@@ -1,10 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString } from 'class-validator';
 
 export class CheckUserExistBodyDto {
   @ApiProperty({
     example: 'test@gmail.com',
     description: 'Электронная почта',
   })
+  @IsString({ message: 'Поле email должно быть строкой' })
+  @IsEmail({}, { message: 'Некорректный email' })
   readonly email: string;
 }
 

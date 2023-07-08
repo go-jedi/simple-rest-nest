@@ -1,15 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CreateRoleBodyDto {
   @ApiProperty({
     example: 'admin',
     description: 'Название роли',
   })
+  @IsString({ message: 'Поле value должно быть строкой' })
   readonly value: string;
   @ApiProperty({
     example: 'администратор',
     description: 'Описание роли',
   })
+  @IsString({ message: 'Поле description должно быть строкой' })
   readonly description: string;
 }
 

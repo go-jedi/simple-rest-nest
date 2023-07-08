@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 interface getRoleByValueResult {
   id: number;
@@ -12,6 +13,7 @@ export class GetRoleByValueBodyDto {
     example: 'admin',
     description: 'Название роли',
   })
+  @IsString({ message: 'Поле value должно быть строкой' })
   readonly value: string;
 }
 

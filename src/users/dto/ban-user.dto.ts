@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class BanUserBodyDto {
   @ApiProperty({
     example: 1,
     description: 'Id пользователя',
   })
+  @IsNumber({}, { message: 'Поле userId должно быть числом' })
   readonly userId: number;
 }
 
