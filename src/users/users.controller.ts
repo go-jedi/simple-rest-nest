@@ -9,6 +9,7 @@ import {
 import { CreateUserBodyDto, CreateUserResponse } from './dto/create-user.dto';
 import { GetAllUsersResponse } from './dto/get-all-users.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { BanUserBodyDto, BanUserResponse } from './dto/ban-user.dto';
 
 @ApiTags('Пользователи')
 @Controller('api-v1/users')
@@ -37,5 +38,13 @@ export class UsersController {
   @Get()
   getAll(): Promise<GetAllUsersResponse> {
     return this.usersService.getAllUsers();
+  }
+
+  @ApiOperation({ summary: 'Забанить пользователя' })
+  @ApiResponse({ status: 200, type: BanUserResponse })
+  @UseGuards(JwtAuthGuard)
+  @Post('ban-user')
+  banUser(@Body() userDto: BanUserBodyDto): Promise<BanUserResponse> {
+    return this.usersService.banUser(userDto);
   }
 }

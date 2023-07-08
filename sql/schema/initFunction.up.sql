@@ -1,3 +1,31 @@
+CREATE OR REPLACE FUNCTION public.admin_ban_user(
+	js json)
+    RETURNS boolean
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+    _u users;
+BEGIN
+    SELECT *
+    FROM users
+    WHERE id = (js->>'userId')::INTEGER
+    INTO _u;
+
+    IF _u.id ISNULL THEN
+        RAISE EXCEPTION 'пользователя с таким id не существует';
+    END IF;
+
+    UPDATE users SET
+        banned = TRUE,
+        banReason = 'оскорбление пользователей'
+    WHERE id = (js->>'userId')::INTEGER;
+
+    RETURN TRUE;
+END;
+$BODY$;
+
 CREATE OR REPLACE FUNCTION public.role_create(
 	js json)
     RETURNS boolean
@@ -25,6 +53,47 @@ BEGIN
     ELSE
         RAISE EXCEPTION 'роль с таким названием уже существует';
     END IF;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.role_add_user(
+	js json)
+    RETURNS boolean
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE
+    _u users;
+    _r roles;
+BEGIN
+    SELECT *
+    FROM users
+    WHERE id = (js->>'userId')::INTEGER
+    INTO _u;
+
+    IF _u.id ISNULL THEN
+        RAISE EXCEPTION 'пользователя с таким id не существует';
+    END IF;
+
+    SELECT *
+    FROM roles
+    WHERE id = (js->>'roleId')::INTEGER
+    INTO _r;
+
+    IF _r.id ISNULL THEN
+        RAISE EXCEPTION 'роли с таким id не существует';
+    END IF;
+
+    INSERT INTO user_roles(
+        user_id,
+        role_id
+    ) VALUES(
+        (js->>'userId')::INTEGER,
+        (js->>'roleId')::INTEGER
+    );
+
+    RETURN TRUE;
 END;
 $BODY$;
 
