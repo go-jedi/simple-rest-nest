@@ -1,15 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 
 export class AddRoleBodyDto {
   @ApiProperty({
     example: 1,
     description: 'Id пользователя',
   })
+  @IsNumber({}, { message: 'Поле userId должно быть числом' })
   readonly userId: number;
   @ApiProperty({
     example: 2,
     description: 'Id роли',
   })
+  @IsNumber({}, { message: 'Поле roleId должно быть числом' })
   readonly roleId: number;
 }
 
