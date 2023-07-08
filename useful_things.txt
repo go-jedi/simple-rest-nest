@@ -1,3 +1,4 @@
 npm i @nestjs/configs
 npm i cross-env  <- если нам нужно задать заранее в package.json (NODE_ENV) при запуске приложения
 npm install @nestjs/swagger swagger-ui-express - установка swagger и swagger графическое представление
+npm install @nestjs/jwt bcryptjs - jwt и кеширование пароля
